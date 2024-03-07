@@ -1,3 +1,4 @@
+// App.jsx
 import { useState } from "react";
 import NewProject from "./components/NewProject";
 import NoProjectSelected from "./components/NoProjectSelected";
@@ -9,24 +10,31 @@ function App() {
     projects: []
   });
 
-  function handleStartAddProject(){
-    setProjectsState(prevState=>({
-        ...prevState,
-        selectedProjectId: null,
+  function handleStartAddProject() {
+    setProjectsState(prevState => ({
+      ...prevState,
+      selectedProjectId: null,
+    }));
+  }
+
+  const handleSaveProject = (newProject) => {
+    setProjectsState(prevState => ({
+      ...prevState,
+      selectedProjectId: undefined,
+      projects: [...prevState.projects, newProject],
     }));
   }
 
   let content;
-  if(projectsState.selectedProjectId === null){
-    content = <NewProject/>
-  }
-  else if(projectsState.selectedProjectId === undefined){
-    content = <NoProjectSelected onStartAddProject={handleStartAddProject}/>
+  if (projectsState.selectedProjectId === null) {
+    content = <NewProject onSaveProject={handleSaveProject} />;
+  } else if (projectsState.selectedProjectId === undefined) {
+    content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
   }
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <ProjectsSidebar/>
+      <ProjectsSidebar onStartAddProject={handleStartAddProject} projects={projectsState.projects} />
       {content}
     </main>
   );
